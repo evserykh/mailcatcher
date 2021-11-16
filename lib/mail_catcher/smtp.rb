@@ -5,6 +5,26 @@ require "eventmachine"
 require "mail_catcher/mail"
 
 class MailCatcher::Smtp < EventMachine::Protocols::SmtpServer
+  def post_init
+    puts 'I: New connection'
+    super
+  end
+
+  def connection_completed
+    puts 'I: Connection closed'
+    super
+  end
+
+  def receive_data(data)
+    puts "R: #{data}"
+    super
+  end
+
+  def send_data(data)
+    puts "S: #{data}"
+    super
+  end
+
   # We override EM's mail from processing to allow multiple mail-from commands
   # per [RFC 2821](https://tools.ietf.org/html/rfc2821#section-4.1.1.2)
   def process_mail_from sender
